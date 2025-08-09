@@ -1,4 +1,4 @@
-lscr.io/linuxserver/baseimage-kasmvnc:debianbullseye
+FROM lscr.io/linuxserver/baseimage-kasmvnc:debianbullseye
 # set version label
 ARG BUILD_DATE
 ARG VERSION
@@ -40,5 +40,6 @@ COPY /root /
 
 EXPOSE 3000 8001
 VOLUME /config
+
 
 
