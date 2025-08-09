@@ -1,5 +1,4 @@
-FROM kasmweb/ubuntu:1.14.0
-
+FROM ubuntu:22.04
 # set version label
 ARG BUILD_DATE
 ARG VERSION
@@ -41,6 +40,7 @@ COPY /root /
 
 EXPOSE 3000 8001
 VOLUME /config
+
 
 
 
