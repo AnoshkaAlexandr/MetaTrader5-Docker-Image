@@ -1,4 +1,4 @@
-FROM debian:bullseye
+FROM ghcr.io/linuxserver/baseimage-kasmvnc:debianbookworm
 # set version label
 ARG BUILD_DATE
 ARG VERSION
@@ -40,6 +40,7 @@ COPY /root /
 
 EXPOSE 3000 8001
 VOLUME /config
+
 
 
 
