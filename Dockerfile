@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:20.04
 # set version label
 ARG BUILD_DATE
 ARG VERSION
@@ -40,6 +40,7 @@ COPY /root /
 
 EXPOSE 3000 8001
 VOLUME /config
+
 
 
 
