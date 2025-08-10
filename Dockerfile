@@ -12,10 +12,13 @@ ENV WINEPREFIX="/config/.wine"
 RUN apt-get update && apt-get upgrade -y
 
 # Install required packages
-RUN apt-get install -y \
-    python3-pip \
-    wget \
-    && pip3 install --upgrade pip
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends wget python3-pip && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    # Upgrade pip with --break-system-packages
+    pip3 install --upgrade pip --break-system-packages
 
 # Add WineHQ repository key and APT source
 RUN wget -q https://dl.winehq.org/wine-builds/winehq.key \
@@ -40,6 +43,7 @@ COPY /root /
 
 EXPOSE 3000 8001
 VOLUME /config
+
 
 
 
