@@ -19,7 +19,7 @@
       curl \
       gnupg2 \
       software-properties-common \
-      && pip3 install --upgrade pip
+      && pip3 install --break-system-packages --upgrade pip
 
   # Add WineHQ repository key using modern method
   RUN mkdir -pm755 /etc/apt/keyrings \
@@ -42,5 +42,6 @@
 
   EXPOSE 3000 8001
   VOLUME /config
+
 
 
