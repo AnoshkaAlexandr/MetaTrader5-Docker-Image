@@ -1,56 +1,44 @@
-FROM ghcr.io/linuxserver/baseimage-kasmvnc:debianbullseye-8446af38-ls104
-# set version label
-ARG BUILD_DATE
-ARG VERSION
-LABEL build_version="Metatrader Docker:- ${VERSION} Build-date:- ${BUILD_DATE}"
-LABEL maintainer="gmartin"
+FROM ghcr.io/linuxserver/baseimage-kasmvnc:debianbullseye
 
-ENV TITLE=Metatrader5
-ENV WINEPREFIX="/config/.wine"
+  # set version label
+  ARG BUILD_DATE
+  ARG VERSION
+  LABEL build_version="Metatrader Docker:- ${VERSION} Build-date:- ${BUILD_DATE}"
+  LABEL maintainer="gmartin"
 
-# Update package lists and upgrade packages
-RUN apt-get update && apt-get upgrade -y
+  ENV TITLE=Metatrader5
+  ENV WINEPREFIX="/config/.wine"
 
-# Install required packages
-RUN apt update && \
-    apt upgrade -y && \
-    apt install -y --no-install-recommends wget python3-pip && \
-    apt clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    # Upgrade pip with --break-system-packages
-    pip3 install --upgrade pip --break-system-packages
+  # Update package lists and upgrade packages
+  RUN apt-get update && apt-get upgrade -y
 
-# Add WineHQ repository key and APT source
-RUN wget -q https://dl.winehq.org/wine-builds/winehq.key \
-    && apt-key add winehq.key \
-    && add-apt-repository 'deb https://dl.winehq.org/wine-builds/debian/ bullseye main' \
-    && rm winehq.key
+  # Install required packages
+  RUN apt-get install -y \
+      python3-pip \
+      wget \
+      curl \
+      gnupg2 \
+      software-properties-common \
+      && pip3 install --upgrade pip
 
-# Add i386 architecture and update package lists
-RUN dpkg --add-architecture i386 \
-    && apt update
+  # Add WineHQ repository key using modern method
+  RUN mkdir -pm755 /etc/apt/keyrings \
+      && curl -fsSL https://dl.winehq.org/wine-builds/winehq.key | gpg --dearmor -o /etc/apt/keyrings/winehq.gpg \
+      && echo "deb [signed-by=/etc/apt/keyrings/winehq.gpg] https://dl.winehq.org/wine-builds/debian/ bullseye main" > /etc/apt/sources.list.d/winehq.list
 
-# Install WineHQ stable package and dependencies
-RUN apt-get install --install-recommends -y \
-    winehq-stable \
-    && apt clean \
-    && rm -rf /var/lib/apt/lists/*
+  # Add i386 architecture and update package lists
+  RUN dpkg --add-architecture i386 \
+      && apt-get update
 
+  # Install WineHQ stable package and dependencies
+  RUN apt-get install --install-recommends -y \
+      winehq-stable \
+      && apt-get clean \
+      && rm -rf /var/lib/apt/lists/*
 
-COPY /Metatrader /Metatrader
-RUN chmod +x /Metatrader/start.sh
-COPY /root /
+  COPY /Metatrader /Metatrader
+  RUN chmod +x /Metatrader/start.sh
+  COPY /root /
 
-EXPOSE 3000 8001
-VOLUME /config
-
-
-
-
-
-
-
-
-
-
-
+  EXPOSE 3000 8001
+  VOLUME /config
