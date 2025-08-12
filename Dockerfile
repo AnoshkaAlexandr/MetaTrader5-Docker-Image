@@ -1,4 +1,4 @@
-FROM ghcr.io/linuxserver/baseimage-kasmvnc:debianbullseye
+FROM --platform=linux/amd64 ghcr.io/linuxserver/baseimage-kasmvnc:debianbullseye
 
   # set version label
   ARG BUILD_DATE
@@ -42,3 +42,4 @@ FROM ghcr.io/linuxserver/baseimage-kasmvnc:debianbullseye
 
   EXPOSE 3000 8001
   VOLUME /config
+
